@@ -66,4 +66,20 @@ public class Campo {
 				.noneMatch(v -> v.minado);
 	}
 	
+	void minar() {
+		minado = true;
+	}
+	
+	public boolean isMarcado() {
+		return marcado;
+	}
+	
+	public boolean isAberto() {
+		return aberto;
+	}
+	
+	public boolean isFechado() {
+		return !isAberto();
+	}
+	
 }
