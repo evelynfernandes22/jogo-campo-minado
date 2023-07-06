@@ -3,6 +3,8 @@ package br.com.evelyn.cm.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.evelyn.cm.exception.ExplosaoException;
+
 public class Campo {
 
 	private final int linha;
@@ -17,7 +19,7 @@ public class Campo {
 		this.coluna = coluna;
 	}
 	
-	public boolean adicionarVizinho(Campo vizinho) {
+	boolean adicionarVizinho(Campo vizinho) {
 		boolean linhaDiferente = this.linha != vizinho.linha;
 		boolean colunaDiferente = this.coluna != vizinho.coluna;
 		boolean diagonal = linhaDiferente && colunaDiferente;
@@ -36,4 +38,32 @@ public class Campo {
 		}
 		return false;
 	}
+	
+	void alternarMarcacao() {
+		if(!aberto) {
+			marcado = !marcado;
+		}
+	}
+	
+	boolean abrir() {
+		
+		if(!aberto && !marcado) {
+			aberto = true;
+			
+			if(minado) {
+				throw new ExplosaoException();
+			}
+			if(vizinhancaSegura()) {
+				vizinhos.forEach(v -> v.abrir());
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	boolean vizinhancaSegura() {
+		return vizinhos.stream()
+				.noneMatch(v -> v.minado);
+	}
+	
 }
